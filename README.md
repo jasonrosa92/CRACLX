@@ -51,3 +51,18 @@ Health check:
 ```text
 GET /health
 ```
+
+## Configuration
+
+Business calculation parameters are loaded from environment variables or `.env`.
+
+Available variables:
+
+- `AGE_RATE_INCREMENT`: rate added for each vehicle age unit
+- `AGE_UNIT_YEARS`: number of years represented by one age unit
+- `COVERAGE_PERCENTAGE`: policy coverage percentage, defaulting to `1.00`
+- `GIS_ADJUSTMENT_MAX`: maximum geographic risk adjustment
+- `GIS_ADJUSTMENT_MIN`: minimum geographic risk adjustment
+- `REFERENCE_YEAR`: optional year override for deterministic calculations
+- `VALUE_RATE_INCREMENT`: rate added for each vehicle value unit
+- `VALUE_RATE_UNIT`: monetary value represented by one value unit
