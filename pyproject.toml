@@ -1,0 +1,58 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools>=69", "wheel"]
+
+[project]
+authors = [
+  { name = "Jason Silva", email = "jason@fluxo.tec.br" },
+]
+dependencies = [
+  "fastapi>=0.115,<1.0",
+  "pydantic>=2.10,<3.0",
+  "pydantic-settings>=2.7,<3.0",
+  "uvicorn[standard]>=0.34,<1.0",
+]
+description = "Backend API for car insurance quote calculation."
+name = "craclx"
+readme = "README.md"
+requires-python = ">=3.12"
+version = "0.1.0"
+
+[project.optional-dependencies]
+dev = [
+  "httpx>=0.28,<1.0",
+  "mypy>=1.14,<2.0",
+  "pytest>=8.3,<10.0",
+  "pytest-cov>=6.0,<8.0",
+  "ruff>=0.8,<1.0",
+]
+
+[tool.mypy]
+disallow_untyped_defs = true
+files = ["src", "tests"]
+python_version = "3.12"
+strict = true
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 88
+src = ["src", "tests"]
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+  "B",
+  "C4",
+  "E",
+  "F",
+  "I",
+  "N",
+  "UP",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
