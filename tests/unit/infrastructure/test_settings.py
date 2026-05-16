@@ -1,5 +1,7 @@
 from decimal import Decimal
 
+from pytest import MonkeyPatch
+
 from craclx.infrastructure.settings import Settings
 
 
@@ -35,7 +37,7 @@ def test_settings_convert_to_domain_calculation_parameters() -> None:
 
 
 def test_settings_load_calculation_parameters_from_environment(
-    monkeypatch,
+    monkeypatch: MonkeyPatch,
 ) -> None:
     monkeypatch.setenv("AGE_RATE_INCREMENT", "0.010")
     monkeypatch.setenv("AGE_UNIT_YEARS", "2")
