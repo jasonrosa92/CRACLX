@@ -1,6 +1,12 @@
 from decimal import Decimal
 
-from craclx.domain.quote_calculator import CalculationParameters, QuoteCalculator
+import pytest
+
+from craclx.domain.quote_calculator import (
+    CalculationParameters,
+    DomainValidationError,
+    QuoteCalculator,
+)
 
 
 def test_calculates_challenge_example_quote() -> None:
@@ -100,3 +106,50 @@ def test_includes_geographic_adjustment_in_applied_rate() -> None:
     )
 
     assert quote.applied_rate == Decimal("0.045")
+
+
+def test_rejects_negative_car_value() -> None:
+    calculator = QuoteCalculator(
+        parameters=CalculationParameters(
+            age_rate_increment=Decimal("0.005"),
+            age_unit_years=1,
+            coverage_percentage=Decimal("1.00"),
+            value_rate_increment=Decimal("0.005"),
+            value_rate_unit=Decimal("10000.00"),
+        )
+    )
+
+    with pytest.raises(DomainValidationError, match="car_value must be non-negative"):
+        calculator.calculate(
+            broker_fee=Decimal("0.00"),
+            car_value=Decimal("-1.00"),
+            deductible_percentage=Decimal("0.00"),
+            geographic_adjustment=Decimal("0.00"),
+            reference_year=2026,
+            vehicle_year=2024,
+        )
+
+
+def test_rejects_vehicle_year_after_reference_year() -> None:
+    calculator = QuoteCalculator(
+        parameters=CalculationParameters(
+            age_rate_increment=Decimal("0.005"),
+            age_unit_years=1,
+            coverage_percentage=Decimal("1.00"),
+            value_rate_increment=Decimal("0.005"),
+            value_rate_unit=Decimal("10000.00"),
+        )
+    )
+
+    with pytest.raises(
+        DomainValidationError,
+        match="vehicle_year must be less than or equal to reference_year",
+    ):
+        calculator.calculate(
+            broker_fee=Decimal("0.00"),
+            car_value=Decimal("10000.00"),
+            deductible_percentage=Decimal("0.00"),
+            geographic_adjustment=Decimal("0.00"),
+            reference_year=2026,
+            vehicle_year=2027,
+        )
