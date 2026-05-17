@@ -59,9 +59,24 @@ class DynamicRateCalculator:
         return age_rate + value_rate + geographic_adjustment
 
 
+class PremiumCalculator:
+    def calculate(
+        self,
+        applied_rate: Decimal,
+        broker_fee: Decimal,
+        car_value: Decimal,
+        deductible_percentage: Decimal,
+    ) -> Decimal:
+        base_premium = car_value * applied_rate
+        deductible_discount = base_premium * deductible_percentage
+
+        return base_premium - deductible_discount + broker_fee
+
+
 class QuoteCalculator:
     def __init__(self, parameters: CalculationParameters) -> None:
         self._parameters = parameters
+        self._premium_calculator = PremiumCalculator()
         self._rate_calculator = DynamicRateCalculator(parameters=parameters)
 
     def calculate(
@@ -86,9 +101,12 @@ class QuoteCalculator:
             reference_year=reference_year,
             vehicle_year=vehicle_year,
         )
-        base_premium = car_value * applied_rate
-        deductible_discount = base_premium * deductible_percentage
-        calculated_premium = base_premium - deductible_discount + broker_fee
+        calculated_premium = self._premium_calculator.calculate(
+            applied_rate=applied_rate,
+            broker_fee=broker_fee,
+            car_value=car_value,
+            deductible_percentage=deductible_percentage,
+        )
 
         base_policy_limit = car_value * self._parameters.coverage_percentage
         deductible_value = base_policy_limit * deductible_percentage
