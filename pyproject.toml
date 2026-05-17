@@ -4,7 +4,7 @@ requires = ["setuptools>=69", "wheel"]
 
 [project]
 authors = [
-  { name = "Jason Rosa", email = "jason@fluxo.tec.br" },
+  { name = "Jason Rosa", email = "jasoon.rosa@gmail.com" },
 ]
 dependencies = [
   "fastapi>=0.115,<1.0",
