@@ -46,8 +46,11 @@ def test_settings_load_calculation_parameters_from_environment(
     monkeypatch.setenv("COVERAGE_PERCENTAGE", "0.75")
     monkeypatch.setenv("GIS_ADJUSTMENT_MAX", "0.015")
     monkeypatch.setenv("GIS_ADJUSTMENT_MIN", "-0.010")
-    monkeypatch.setenv("GIS_HIGH_RISK_LOCATIONS", "BR:SP:Sao Paulo:*,US:CA:*:*")
-    monkeypatch.setenv("GIS_LOW_RISK_LOCATIONS", "BR:SC:Florianopolis:*")
+    monkeypatch.setenv(
+        "GIS_HIGH_RISK_LOCATIONS",
+        '["BR:SP:Sao Paulo:*", "US:CA:*:*"]',
+    )
+    monkeypatch.setenv("GIS_LOW_RISK_LOCATIONS", '["BR:SC:Florianopolis:*"]')
     monkeypatch.setenv("REFERENCE_YEAR", "2026")
     monkeypatch.setenv("VALUE_RATE_INCREMENT", "0.020")
     monkeypatch.setenv("VALUE_RATE_UNIT", "5000.00")

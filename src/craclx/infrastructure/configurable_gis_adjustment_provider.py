@@ -44,7 +44,7 @@ def _location_parts(address: Address) -> tuple[str, str, str, str]:
 def _matches(location: tuple[str, str, str, str], pattern: tuple[str, ...]) -> bool:
     return all(
         expected == "*" or expected == actual
-        for actual, expected in zip(location, pattern)
+        for actual, expected in zip(location, pattern, strict=True)
     )
 
 
