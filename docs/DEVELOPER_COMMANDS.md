@@ -48,3 +48,19 @@ Run coverage when changing business behavior or API contracts:
 ```bash
 make test-cov
 ```
+
+## Automatic Fixes
+
+Apply formatting:
+
+```bash
+make format
+```
+
+Apply safe lint fixes:
+
+```bash
+make lint-fix
+```
+
+After running automatic fixes, run the full local validation suite again before committing.
