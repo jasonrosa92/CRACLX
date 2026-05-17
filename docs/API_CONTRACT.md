@@ -105,3 +105,34 @@ The field is accepted by the current API but does not change the rate until the 
   }
 }
 ```
+
+## Quote Response Body
+
+Successful responses include the echoed car details and calculated quote fields.
+
+Response fields:
+
+- `car`: car details echoed from the request
+- `applied_rate`: final calculated rate after rate components and adjustments
+- `policy_limit`: final policy limit after deductible application
+- `calculated_premium`: final premium after deductible discount and broker fee
+- `deductible_value`: monetary deductible value calculated from the original policy limit
+
+### Response Example
+
+```json
+{
+  "applied_rate": "0.100",
+  "calculated_premium": "9050.0000000",
+  "car": {
+    "make": "Toyota",
+    "model": "Corolla",
+    "year": 2016,
+    "value": "100000.00"
+  },
+  "deductible_value": "10000.000000",
+  "policy_limit": "90000.000000"
+}
+```
+
+Decimal values are serialized as strings to preserve precision in JSON responses.
