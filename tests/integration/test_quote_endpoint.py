@@ -40,3 +40,26 @@ async def test_app_exposes_quote_endpoint() -> None:
     }
     assert Decimal(payload["deductible_value"]) == Decimal("10000.000000")
     assert Decimal(payload["policy_limit"]) == Decimal("90000.000000")
+
+
+@pytest.mark.anyio
+async def test_quote_endpoint_rejects_invalid_payload() -> None:
+    get_settings.cache_clear()
+    transport = ASGITransport(app=create_app())
+
+    async with AsyncClient(base_url="http://testserver", transport=transport) as client:
+        response = await client.post(
+            "/quotes",
+            json={
+                "broker_fee": "50.00",
+                "car": {
+                    "make": "Toyota",
+                    "model": "Corolla",
+                    "value": "-1.00",
+                    "year": 2016,
+                },
+                "deductible_percentage": "0.10",
+            },
+        )
+
+    assert response.status_code == 422
