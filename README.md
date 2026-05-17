@@ -15,6 +15,7 @@ The frontend is outside this repository.
 - [Project Bootstrap Plan](docs/PROJECT_BOOTSTRAP_PLAN.md)
 - [API Contract](docs/API_CONTRACT.md)
 - [Developer Commands](docs/DEVELOPER_COMMANDS.md)
+- [GIS Integration Path](docs/GIS_INTEGRATION.md)
 - [ADR-0001: Backend Architecture](docs/adr/ADR-0001-backend-architecture.md)
 - [SDR-0001: Backend System Design](docs/sdr/SDR-0001-backend-system-design.md)
 

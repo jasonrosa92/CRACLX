@@ -104,6 +104,7 @@ Expected outcomes:
 - rate adjustment constrained by configuration
 - tests covering the optional adjustment behavior
 - design prepared for a future real GIS integration
+- future real GIS integration path documented
 
 ## Initial Task Breakdown
 
