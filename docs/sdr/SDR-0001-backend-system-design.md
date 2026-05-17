@@ -221,6 +221,10 @@ The application layer owns the `Address` value object used by the port. The API 
 
 When no `registration_location` is provided, the application uses a no-op provider that returns `0.00`. This keeps GIS optional while preserving the same quote calculation flow.
 
+The current infrastructure adapter is configurable and pattern-based. A future real provider should be introduced as another infrastructure adapter behind the same port, keeping the API, application use case, and domain calculator stable.
+
+See [GIS Integration Path](../GIS_INTEGRATION.md) for the future provider strategy.
+
 ## Error Handling Design
 
 The backend should distinguish:
