@@ -162,6 +162,34 @@ async def test_quote_endpoint_applies_high_risk_gis_adjustment(
     assert Decimal(payload["calculated_premium"]) == Decimal("10850.0000000")
 
 
+@pytest.mark.anyio
+async def test_quote_endpoint_applies_low_risk_gis_adjustment(
+    monkeypatch: MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("GIS_LOW_RISK_LOCATIONS", '["BR:SC:Florianopolis:*"]')
+    monkeypatch.setenv("REFERENCE_YEAR", "2026")
+    get_settings.cache_clear()
+    transport = ASGITransport(app=create_app())
+
+    async with AsyncClient(base_url="http://testserver", transport=transport) as client:
+        response = await client.post(
+            "/quotes",
+            json=_quote_payload_with_location(
+                city="Florianopolis",
+                country="BR",
+                postal_code="88000-000",
+                state="SC",
+                street="Avenida Beira-Mar",
+            ),
+        )
+
+    payload = response.json()
+
+    assert response.status_code == 200
+    assert Decimal(payload["applied_rate"]) == Decimal("0.080")
+    assert Decimal(payload["calculated_premium"]) == Decimal("7250.0000000")
+
+
 def _quote_payload_with_location(
     city: str,
     country: str,
