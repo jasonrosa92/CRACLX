@@ -92,3 +92,19 @@ POST /quotes
 ```
 
 The request and response contract is documented in [API Contract](API_CONTRACT.md).
+
+## Continuous Integration
+
+GitHub Actions runs the backend validation pipeline on pull requests and pushes to `develop` and `main`.
+
+The CI pipeline intentionally mirrors the local validation commands:
+
+```bash
+make install
+make format-check
+make lint
+make typecheck
+make test
+```
+
+If a command fails in CI, reproduce it locally with the same `make` target before changing the workflow.
