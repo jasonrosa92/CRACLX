@@ -3,7 +3,7 @@ from decimal import Decimal
 import pytest
 from pydantic import ValidationError
 
-from craclx.api.quote_schemas import CarDetailsSchema
+from craclx.api.quote_schemas import AddressSchema, CarDetailsSchema
 
 
 def test_car_details_schema_accepts_vehicle_payload() -> None:
@@ -32,3 +32,23 @@ def test_car_details_schema_rejects_negative_value() -> None:
                 "year": 2016,
             }
         )
+
+
+def test_address_schema_accepts_registration_location_payload() -> None:
+    address = AddressSchema.model_validate(
+        {
+            "city": "Sao Paulo",
+            "country": "BR",
+            "postal_code": "01000-000",
+            "state": "SP",
+            "street": "Avenida Paulista",
+        }
+    )
+
+    assert address == AddressSchema(
+        city="Sao Paulo",
+        country="BR",
+        postal_code="01000-000",
+        state="SP",
+        street="Avenida Paulista",
+    )
