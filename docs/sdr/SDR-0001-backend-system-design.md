@@ -204,10 +204,10 @@ Configuration rules:
 
 GIS adjustment will be implemented through a port defined by the application layer.
 
-Proposed port behavior:
+Current port behavior:
 
 ```text
-get_adjustment(registration_location) -> rate adjustment
+calculate_adjustment(address) -> rate adjustment
 ```
 
 Rules:
@@ -216,6 +216,10 @@ Rules:
 - the domain must not call GIS providers directly
 - initial implementation may use a fake or configurable adapter
 - future implementation may use a real external GIS provider
+
+The application layer owns the `Address` value object used by the port. The API layer maps its request schema into this value object before executing the use case.
+
+When no `registration_location` is provided, the application uses a no-op provider that returns `0.00`. This keeps GIS optional while preserving the same quote calculation flow.
 
 ## Error Handling Design
 
