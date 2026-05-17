@@ -132,3 +132,57 @@ async def test_quote_endpoint_accepts_registration_location() -> None:
 
     assert response.status_code == 200
     assert Decimal(response.json()["calculated_premium"]) > Decimal("0")
+
+
+@pytest.mark.anyio
+async def test_quote_endpoint_applies_high_risk_gis_adjustment(
+    monkeypatch: MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("GIS_HIGH_RISK_LOCATIONS", '["BR:SP:Sao Paulo:*"]')
+    monkeypatch.setenv("REFERENCE_YEAR", "2026")
+    get_settings.cache_clear()
+    transport = ASGITransport(app=create_app())
+
+    async with AsyncClient(base_url="http://testserver", transport=transport) as client:
+        response = await client.post(
+            "/quotes",
+            json=_quote_payload_with_location(
+                city="Sao Paulo",
+                country="BR",
+                postal_code="01000-000",
+                state="SP",
+                street="Avenida Paulista",
+            ),
+        )
+
+    payload = response.json()
+
+    assert response.status_code == 200
+    assert Decimal(payload["applied_rate"]) == Decimal("0.120")
+    assert Decimal(payload["calculated_premium"]) == Decimal("10850.0000000")
+
+
+def _quote_payload_with_location(
+    city: str,
+    country: str,
+    postal_code: str,
+    state: str,
+    street: str,
+) -> dict[str, object]:
+    return {
+        "broker_fee": "50.00",
+        "car": {
+            "make": "Toyota",
+            "model": "Corolla",
+            "value": "100000.00",
+            "year": 2016,
+        },
+        "deductible_percentage": "0.10",
+        "registration_location": {
+            "city": city,
+            "country": country,
+            "postal_code": postal_code,
+            "state": state,
+            "street": street,
+        },
+    }
