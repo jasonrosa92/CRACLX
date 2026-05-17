@@ -10,6 +10,7 @@ from craclx.application.calculate_quote import (
     CalculateQuoteUseCase,
     CarDetails,
 )
+from craclx.application.gis_adjustment import Address
 
 
 def create_quote_router(use_case: CalculateQuoteUseCase) -> APIRouter:
@@ -27,6 +28,7 @@ def create_quote_router(use_case: CalculateQuoteUseCase) -> APIRouter:
                     year=request.car.year,
                 ),
                 deductible_percentage=request.deductible_percentage,
+                registration_location=_to_address(request=request),
             )
         )
 
@@ -44,3 +46,16 @@ def create_quote_router(use_case: CalculateQuoteUseCase) -> APIRouter:
         )
 
     return router
+
+
+def _to_address(request: QuoteRequestSchema) -> Address | None:
+    if request.registration_location is None:
+        return None
+
+    return Address(
+        city=request.registration_location.city,
+        country=request.registration_location.country,
+        postal_code=request.registration_location.postal_code,
+        state=request.registration_location.state,
+        street=request.registration_location.street,
+    )
