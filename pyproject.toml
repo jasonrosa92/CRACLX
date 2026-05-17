@@ -29,9 +29,11 @@ dev = [
 
 [tool.mypy]
 disallow_untyped_defs = true
+implicit_reexport = false
 files = ["src", "tests"]
 python_version = "3.12"
 strict = true
+warn_unused_configs = true
 
 [tool.pytest.ini_options]
 addopts = "-ra"
