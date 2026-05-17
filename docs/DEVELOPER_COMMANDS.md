@@ -64,3 +64,31 @@ make lint-fix
 ```
 
 After running automatic fixes, run the full local validation suite again before committing.
+
+## Run The API
+
+Start the FastAPI application locally:
+
+```bash
+uvicorn craclx.bootstrap.app:create_app --factory --reload
+```
+
+Health check:
+
+```bash
+curl http://127.0.0.1:8000/health
+```
+
+Interactive API documentation:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+Quote endpoint:
+
+```text
+POST /quotes
+```
+
+The request and response contract is documented in [API Contract](API_CONTRACT.md).
