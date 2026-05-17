@@ -5,7 +5,10 @@ from craclx.application.calculate_quote import (
     CalculateQuoteUseCase,
     CarDetails,
 )
-from craclx.application.gis_adjustment import Address
+from craclx.application.gis_adjustment import (
+    Address,
+    NoGeographicRiskAdjustmentProvider,
+)
 from craclx.domain.quote_calculator import CalculationParameters, QuoteCalculator
 
 
@@ -20,6 +23,7 @@ def test_calculate_quote_use_case_returns_car_details_and_quote_values() -> None
                 value_rate_unit=Decimal("10000.00"),
             )
         ),
+        geographic_risk_adjustment_provider=NoGeographicRiskAdjustmentProvider(),
         reference_year=2026,
     )
 

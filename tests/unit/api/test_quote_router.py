@@ -6,6 +6,7 @@ from httpx import ASGITransport, AsyncClient
 
 from craclx.api.quote_router import create_quote_router
 from craclx.application.calculate_quote import CalculateQuoteUseCase
+from craclx.application.gis_adjustment import NoGeographicRiskAdjustmentProvider
 from craclx.domain.quote_calculator import CalculationParameters, QuoteCalculator
 
 
@@ -64,5 +65,6 @@ def _create_use_case() -> CalculateQuoteUseCase:
                 value_rate_unit=Decimal("10000.00"),
             )
         ),
+        geographic_risk_adjustment_provider=NoGeographicRiskAdjustmentProvider(),
         reference_year=2026,
     )
