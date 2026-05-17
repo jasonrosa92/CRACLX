@@ -34,7 +34,7 @@ The following items are intentionally outside the initial backend scope:
 - production GIS provider contract
 - asynchronous job processing
 - multi-tenant support
-- deployment automation beyond basic project readiness
+- production deployment automation before a deployment target is defined
 
 These items may be revisited after the core backend contract and calculation engine are complete.
 
@@ -90,7 +90,8 @@ Expected outcomes:
 - type checking configured
 - test commands documented
 - local developer workflow documented
-- CI-ready command structure prepared
+- GitHub Actions CI pipeline configured to run the same local validation gates
+- CD kept intentionally pending until the production deployment target is defined
 
 ### r5: GIS Risk Adjustment
 
@@ -135,7 +136,7 @@ Expected outcomes:
 - `#001`: Configure formatting and linting
 - `#002`: Configure type checking
 - `#003`: Add developer command documentation
-- `#004`: Prepare CI command structure
+- `#004`: Add GitHub Actions CI pipeline
 
 ### r5 Tasks
 
