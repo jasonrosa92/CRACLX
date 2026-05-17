@@ -45,12 +45,17 @@ target-version = "py312"
 
 [tool.ruff.lint]
 select = [
+  "A",
+  "ARG",
   "B",
   "C4",
   "E",
   "F",
   "I",
   "N",
+  "RET",
+  "RUF",
+  "SIM",
   "UP",
 ]
 

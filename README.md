@@ -35,10 +35,17 @@ make install
 Run checks:
 
 ```bash
-make format
+make format-check
 make lint
 make typecheck
 make test
+```
+
+Apply automatic formatting and lint fixes:
+
+```bash
+make format
+make lint-fix
 ```
 
 Run the API locally:
