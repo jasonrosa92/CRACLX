@@ -28,4 +28,15 @@ async def test_app_exposes_quote_endpoint() -> None:
         )
 
     assert response.status_code == 200
-    assert Decimal(response.json()["calculated_premium"]) > Decimal("0")
+    payload = response.json()
+
+    assert Decimal(payload["applied_rate"]) == Decimal("0.100")
+    assert Decimal(payload["calculated_premium"]) == Decimal("9050.0000000")
+    assert payload["car"] == {
+        "make": "Toyota",
+        "model": "Corolla",
+        "value": "100000.00",
+        "year": 2016,
+    }
+    assert Decimal(payload["deductible_value"]) == Decimal("10000.000000")
+    assert Decimal(payload["policy_limit"]) == Decimal("90000.000000")
