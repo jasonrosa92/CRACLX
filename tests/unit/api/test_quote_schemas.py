@@ -3,7 +3,12 @@ from decimal import Decimal
 import pytest
 from pydantic import ValidationError
 
-from craclx.api.quote_schemas import AddressSchema, CarDetailsSchema, QuoteRequestSchema
+from craclx.api.quote_schemas import (
+    AddressSchema,
+    CarDetailsSchema,
+    QuoteRequestSchema,
+    QuoteResponseSchema,
+)
 
 
 def test_car_details_schema_accepts_vehicle_payload() -> None:
@@ -107,3 +112,31 @@ def test_quote_request_schema_accepts_optional_registration_location() -> None:
         state="SP",
         street="Avenida Paulista",
     )
+
+
+def test_quote_response_schema_serializes_required_contract() -> None:
+    response = QuoteResponseSchema(
+        applied_rate=Decimal("0.100"),
+        calculated_premium=Decimal("9050.00000"),
+        car=CarDetailsSchema(
+            make="Toyota",
+            model="Corolla",
+            value=Decimal("100000.00"),
+            year=2016,
+        ),
+        deductible_value=Decimal("10000.0000"),
+        policy_limit=Decimal("90000.0000"),
+    )
+
+    assert response.model_dump(mode="json") == {
+        "applied_rate": "0.100",
+        "calculated_premium": "9050.00000",
+        "car": {
+            "make": "Toyota",
+            "model": "Corolla",
+            "value": "100000.00",
+            "year": 2016,
+        },
+        "deductible_value": "10000.0000",
+        "policy_limit": "90000.0000",
+    }
