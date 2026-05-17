@@ -74,6 +74,16 @@ Available variables:
 - `COVERAGE_PERCENTAGE`: policy coverage percentage, defaulting to `1.00`
 - `GIS_ADJUSTMENT_MAX`: maximum geographic risk adjustment
 - `GIS_ADJUSTMENT_MIN`: minimum geographic risk adjustment
+- `GIS_HIGH_RISK_LOCATIONS`: JSON list of high-risk location patterns
+- `GIS_LOW_RISK_LOCATIONS`: JSON list of low-risk location patterns
 - `REFERENCE_YEAR`: optional year override for deterministic calculations
 - `VALUE_RATE_INCREMENT`: rate added for each vehicle value unit
 - `VALUE_RATE_UNIT`: monetary value represented by one value unit
+
+GIS location patterns use this format:
+
+```text
+COUNTRY:STATE:CITY:POSTAL_CODE
+```
+
+Use `*` as a wildcard segment, for example `BR:SP:Sao Paulo:*`.

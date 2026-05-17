@@ -13,6 +13,8 @@ def test_settings_expose_default_calculation_parameters() -> None:
     assert settings.coverage_percentage == Decimal("1.00")
     assert settings.gis_adjustment_max == Decimal("0.02")
     assert settings.gis_adjustment_min == Decimal("-0.02")
+    assert settings.gis_high_risk_locations == ()
+    assert settings.gis_low_risk_locations == ()
     assert settings.reference_year is None
     assert settings.value_rate_increment == Decimal("0.005")
     assert settings.value_rate_unit == Decimal("10000.00")
@@ -44,6 +46,11 @@ def test_settings_load_calculation_parameters_from_environment(
     monkeypatch.setenv("COVERAGE_PERCENTAGE", "0.75")
     monkeypatch.setenv("GIS_ADJUSTMENT_MAX", "0.015")
     monkeypatch.setenv("GIS_ADJUSTMENT_MIN", "-0.010")
+    monkeypatch.setenv(
+        "GIS_HIGH_RISK_LOCATIONS",
+        '["BR:SP:Sao Paulo:*", "US:CA:*:*"]',
+    )
+    monkeypatch.setenv("GIS_LOW_RISK_LOCATIONS", '["BR:SC:Florianopolis:*"]')
     monkeypatch.setenv("REFERENCE_YEAR", "2026")
     monkeypatch.setenv("VALUE_RATE_INCREMENT", "0.020")
     monkeypatch.setenv("VALUE_RATE_UNIT", "5000.00")
@@ -55,6 +62,11 @@ def test_settings_load_calculation_parameters_from_environment(
     assert settings.coverage_percentage == Decimal("0.75")
     assert settings.gis_adjustment_max == Decimal("0.015")
     assert settings.gis_adjustment_min == Decimal("-0.010")
+    assert settings.gis_high_risk_locations == (
+        "BR:SP:Sao Paulo:*",
+        "US:CA:*:*",
+    )
+    assert settings.gis_low_risk_locations == ("BR:SC:Florianopolis:*",)
     assert settings.reference_year == 2026
     assert settings.value_rate_increment == Decimal("0.020")
     assert settings.value_rate_unit == Decimal("5000.00")

@@ -15,6 +15,8 @@ class Settings(BaseSettings):
     coverage_percentage: Decimal = Decimal("1.00")
     gis_adjustment_max: Decimal = Decimal("0.02")
     gis_adjustment_min: Decimal = Decimal("-0.02")
+    gis_high_risk_locations: tuple[str, ...] = ()
+    gis_low_risk_locations: tuple[str, ...] = ()
     reference_year: int | None = None
     value_rate_increment: Decimal = Decimal("0.005")
     value_rate_unit: Decimal = Decimal("10000.00")
