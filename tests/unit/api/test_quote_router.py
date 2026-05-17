@@ -1,6 +1,9 @@
 from decimal import Decimal
 
 from fastapi import APIRouter
+from httpx import ASGITransport, AsyncClient
+import pytest
+from fastapi import FastAPI
 
 from craclx.api.quote_router import create_quote_router
 from craclx.application.calculate_quote import CalculateQuoteUseCase
@@ -8,7 +11,51 @@ from craclx.domain.quote_calculator import CalculationParameters, QuoteCalculato
 
 
 def test_create_quote_router_returns_api_router() -> None:
-    use_case = CalculateQuoteUseCase(
+    use_case = _create_use_case()
+
+    router = create_quote_router(use_case=use_case)
+
+    assert isinstance(router, APIRouter)
+
+
+@pytest.mark.anyio
+async def test_quote_router_calculates_quote_successfully() -> None:
+    app = FastAPI()
+    app.include_router(create_quote_router(use_case=_create_use_case()))
+    transport = ASGITransport(app=app)
+
+    async with AsyncClient(base_url="http://testserver", transport=transport) as client:
+        response = await client.post(
+            "/quotes",
+            json={
+                "broker_fee": "50.00",
+                "car": {
+                    "make": "Toyota",
+                    "model": "Corolla",
+                    "value": "100000.00",
+                    "year": 2016,
+                },
+                "deductible_percentage": "0.10",
+            },
+        )
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "applied_rate": "0.100",
+        "calculated_premium": "9050.00000",
+        "car": {
+            "make": "Toyota",
+            "model": "Corolla",
+            "value": "100000.00",
+            "year": 2016,
+        },
+        "deductible_value": "10000.0000",
+        "policy_limit": "90000.0000",
+    }
+
+
+def _create_use_case() -> CalculateQuoteUseCase:
+    return CalculateQuoteUseCase(
         calculator=QuoteCalculator(
             parameters=CalculationParameters(
                 age_rate_increment=Decimal("0.005"),
@@ -20,7 +67,3 @@ def test_create_quote_router_returns_api_router() -> None:
         ),
         reference_year=2026,
     )
-
-    router = create_quote_router(use_case=use_case)
-
-    assert isinstance(router, APIRouter)
