@@ -39,9 +39,30 @@ class QuoteCalculation:
     policy_limit: Decimal
 
 
+class DynamicRateCalculator:
+    def __init__(self, parameters: CalculationParameters) -> None:
+        self._parameters = parameters
+
+    def calculate(
+        self,
+        car_value: Decimal,
+        geographic_adjustment: Decimal,
+        reference_year: int,
+        vehicle_year: int,
+    ) -> Decimal:
+        age_units = (reference_year - vehicle_year) // self._parameters.age_unit_years
+        value_units = car_value // self._parameters.value_rate_unit
+
+        age_rate = Decimal(age_units) * self._parameters.age_rate_increment
+        value_rate = value_units * self._parameters.value_rate_increment
+
+        return age_rate + value_rate + geographic_adjustment
+
+
 class QuoteCalculator:
     def __init__(self, parameters: CalculationParameters) -> None:
         self._parameters = parameters
+        self._rate_calculator = DynamicRateCalculator(parameters=parameters)
 
     def calculate(
         self,
@@ -87,13 +108,12 @@ class QuoteCalculator:
         reference_year: int,
         vehicle_year: int,
     ) -> Decimal:
-        age_units = (reference_year - vehicle_year) // self._parameters.age_unit_years
-        value_units = car_value // self._parameters.value_rate_unit
-
-        age_rate = Decimal(age_units) * self._parameters.age_rate_increment
-        value_rate = value_units * self._parameters.value_rate_increment
-
-        return age_rate + value_rate + geographic_adjustment
+        return self._rate_calculator.calculate(
+            car_value=car_value,
+            geographic_adjustment=geographic_adjustment,
+            reference_year=reference_year,
+            vehicle_year=vehicle_year,
+        )
 
     def _validate_calculation_input(
         self,
