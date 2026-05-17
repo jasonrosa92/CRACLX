@@ -19,10 +19,10 @@ Install the project with development dependencies:
 make install
 ```
 
-The `Makefile` uses `.venv/bin` by default. If a different virtual environment is needed, override `BIN`:
+The `Makefile` runs tools through the active Python interpreter. If a different Python executable is needed, override `PYTHON`:
 
 ```bash
-make test BIN=/path/to/venv/bin
+make test PYTHON=/path/to/venv/bin/python
 ```
 
 ## Local Validation
