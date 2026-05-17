@@ -16,3 +16,10 @@ class CarDetailsSchema(BaseModel):
     model: str
     value: Decimal = Field(ge=Decimal("0"))
     year: int = Field(gt=0)
+
+
+class QuoteRequestSchema(BaseModel):
+    broker_fee: Decimal = Field(ge=Decimal("0"))
+    car: CarDetailsSchema
+    deductible_percentage: Decimal = Field(ge=Decimal("0"))
+    registration_location: AddressSchema | None = None
