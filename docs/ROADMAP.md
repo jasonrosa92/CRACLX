@@ -106,6 +106,18 @@ Expected outcomes:
 - design prepared for a future real GIS integration
 - future real GIS integration path documented
 
+### r6: Production Readiness
+
+Goal: harden the backend for review, operational confidence, and future deployment.
+
+Expected outcomes:
+
+- standardized API error handling added
+- configuration validation hardened
+- Docker support prepared
+- coverage threshold added to CI
+- release checklist documented
+
 ## Initial Task Breakdown
 
 ### r1 Tasks
@@ -147,6 +159,14 @@ CI/CD note: CI is part of `r4` and validates the backend automatically. CD remai
 - `#002`: Implement configurable GIS adjustment adapter
 - `#003`: Add GIS adjustment tests
 - `#004`: Document future GIS integration path
+
+### r6 Tasks
+
+- `#001`: Add standardized error handling
+- `#002`: Harden configuration validation
+- `#003`: Add Docker support
+- `#004`: Add coverage threshold in CI
+- `#005`: Add release checklist and final documentation polish
 
 ## Acceptance Criteria
 
