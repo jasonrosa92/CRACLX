@@ -39,3 +39,69 @@ Successful response:
 Calculates a car insurance quote from car details, deductible percentage, broker fee, and optional registration location.
 
 The endpoint delegates business behavior to the application and domain layers. The API layer is responsible only for HTTP validation, schema conversion, and response serialization.
+
+## Quote Request Body
+
+Required fields:
+
+- `car`: car details used by the quote calculation
+- `deductible_percentage`: deductible percentage as a decimal value
+- `broker_fee`: broker fee added after deductible discount
+
+Optional fields:
+
+- `registration_location`: address used by future GIS risk adjustment
+
+### Car Details
+
+```json
+{
+  "make": "Toyota",
+  "model": "Corolla",
+  "year": 2016,
+  "value": "100000.00"
+}
+```
+
+Rules:
+
+- `make` must be a string
+- `model` must be a string
+- `year` must be a positive integer
+- `value` must be a non-negative decimal-compatible value
+
+### Registration Location
+
+```json
+{
+  "city": "Sao Paulo",
+  "country": "BR",
+  "postal_code": "01000-000",
+  "state": "SP",
+  "street": "Avenida Paulista"
+}
+```
+
+The field is accepted by the current API but does not change the rate until the GIS adjustment task is implemented.
+
+### Request Example
+
+```json
+{
+  "broker_fee": "50.00",
+  "car": {
+    "make": "Toyota",
+    "model": "Corolla",
+    "year": 2016,
+    "value": "100000.00"
+  },
+  "deductible_percentage": "0.10",
+  "registration_location": {
+    "city": "Sao Paulo",
+    "country": "BR",
+    "postal_code": "01000-000",
+    "state": "SP",
+    "street": "Avenida Paulista"
+  }
+}
+```
