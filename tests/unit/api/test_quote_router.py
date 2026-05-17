@@ -6,7 +6,11 @@ from httpx import ASGITransport, AsyncClient
 
 from craclx.api.quote_router import create_quote_router
 from craclx.application.calculate_quote import CalculateQuoteUseCase
-from craclx.application.gis_adjustment import NoGeographicRiskAdjustmentProvider
+from craclx.application.gis_adjustment import (
+    Address,
+    GeographicRiskAdjustmentProvider,
+    NoGeographicRiskAdjustmentProvider,
+)
 from craclx.domain.quote_calculator import CalculationParameters, QuoteCalculator
 
 
@@ -54,7 +58,49 @@ async def test_quote_router_calculates_quote_successfully() -> None:
     assert Decimal(payload["policy_limit"]) == Decimal("90000.0000")
 
 
-def _create_use_case() -> CalculateQuoteUseCase:
+@pytest.mark.anyio
+async def test_quote_router_maps_registration_location_to_gis_provider() -> None:
+    app = FastAPI()
+    app.include_router(
+        create_quote_router(
+            use_case=_create_use_case(
+                geographic_risk_adjustment_provider=FixedGeographicRiskAdjustmentProvider(
+                    adjustment=Decimal("0.020")
+                )
+            )
+        )
+    )
+    transport = ASGITransport(app=app)
+
+    async with AsyncClient(base_url="http://testserver", transport=transport) as client:
+        response = await client.post(
+            "/quotes",
+            json={
+                "broker_fee": "50.00",
+                "car": {
+                    "make": "Toyota",
+                    "model": "Corolla",
+                    "value": "100000.00",
+                    "year": 2016,
+                },
+                "deductible_percentage": "0.10",
+                "registration_location": {
+                    "city": "Sao Paulo",
+                    "country": "BR",
+                    "postal_code": "01000-000",
+                    "state": "SP",
+                    "street": "Avenida Paulista",
+                },
+            },
+        )
+
+    assert response.status_code == 200
+    assert Decimal(response.json()["applied_rate"]) == Decimal("0.120")
+
+
+def _create_use_case(
+    geographic_risk_adjustment_provider: GeographicRiskAdjustmentProvider | None = None,
+) -> CalculateQuoteUseCase:
     return CalculateQuoteUseCase(
         calculator=QuoteCalculator(
             parameters=CalculationParameters(
@@ -65,6 +111,17 @@ def _create_use_case() -> CalculateQuoteUseCase:
                 value_rate_unit=Decimal("10000.00"),
             )
         ),
-        geographic_risk_adjustment_provider=NoGeographicRiskAdjustmentProvider(),
+        geographic_risk_adjustment_provider=(
+            geographic_risk_adjustment_provider
+            or NoGeographicRiskAdjustmentProvider()
+        ),
         reference_year=2026,
     )
+
+
+class FixedGeographicRiskAdjustmentProvider:
+    def __init__(self, adjustment: Decimal) -> None:
+        self._adjustment = adjustment
+
+    def calculate_adjustment(self, address: Address) -> Decimal:
+        return self._adjustment
