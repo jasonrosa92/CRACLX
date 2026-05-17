@@ -41,6 +41,8 @@ make typecheck
 make test
 ```
 
+Type checking uses `mypy` in strict mode. The package includes a `py.typed` marker so type information is available to consumers.
+
 Apply automatic formatting and lint fixes:
 
 ```bash
