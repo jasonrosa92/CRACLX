@@ -1,9 +1,8 @@
 from decimal import Decimal
 
-from fastapi import APIRouter
-from httpx import ASGITransport, AsyncClient
 import pytest
-from fastapi import FastAPI
+from fastapi import APIRouter, FastAPI
+from httpx import ASGITransport, AsyncClient
 
 from craclx.api.quote_router import create_quote_router
 from craclx.application.calculate_quote import CalculateQuoteUseCase
@@ -40,18 +39,18 @@ async def test_quote_router_calculates_quote_successfully() -> None:
         )
 
     assert response.status_code == 200
-    assert response.json() == {
-        "applied_rate": "0.100",
-        "calculated_premium": "9050.00000",
-        "car": {
-            "make": "Toyota",
-            "model": "Corolla",
-            "value": "100000.00",
-            "year": 2016,
-        },
-        "deductible_value": "10000.0000",
-        "policy_limit": "90000.0000",
+    payload = response.json()
+
+    assert Decimal(payload["applied_rate"]) == Decimal("0.100")
+    assert Decimal(payload["calculated_premium"]) == Decimal("9050.00000")
+    assert payload["car"] == {
+        "make": "Toyota",
+        "model": "Corolla",
+        "value": "100000.00",
+        "year": 2016,
     }
+    assert Decimal(payload["deductible_value"]) == Decimal("10000.0000")
+    assert Decimal(payload["policy_limit"]) == Decimal("90000.0000")
 
 
 def _create_use_case() -> CalculateQuoteUseCase:
