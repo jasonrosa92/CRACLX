@@ -179,3 +179,23 @@ Example invalid request:
 ```
 
 The exact validation error body follows FastAPI's default validation response format.
+
+## Configuration Impact
+
+The quote endpoint uses backend configuration values when calculating the response.
+
+Configuration values that affect quote results:
+
+- `AGE_RATE_INCREMENT`
+- `AGE_UNIT_YEARS`
+- `COVERAGE_PERCENTAGE`
+- `REFERENCE_YEAR`
+- `VALUE_RATE_INCREMENT`
+- `VALUE_RATE_UNIT`
+
+GIS configuration values are already available for future geographic risk adjustment:
+
+- `GIS_ADJUSTMENT_MAX`
+- `GIS_ADJUSTMENT_MIN`
+
+Changing these values changes the calculated quote without changing the API request or response shape.
