@@ -24,3 +24,27 @@ The `Makefile` uses `.venv/bin` by default. If a different virtual environment i
 ```bash
 make test BIN=/path/to/venv/bin
 ```
+
+## Local Validation
+
+Run the full local validation suite before opening or merging a branch:
+
+```bash
+make format-check
+make lint
+make typecheck
+make test
+```
+
+Command responsibilities:
+
+- `make format-check`: verifies code formatting with Ruff without changing files
+- `make lint`: checks code quality rules with Ruff
+- `make typecheck`: validates static typing with `mypy` in strict mode
+- `make test`: runs the automated test suite with `pytest`
+
+Run coverage when changing business behavior or API contracts:
+
+```bash
+make test-cov
+```
