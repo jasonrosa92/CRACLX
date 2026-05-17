@@ -52,7 +52,9 @@ def test_configurable_gis_adjustment_provider_returns_min_adjustment_for_low_ris
     assert adjustment == Decimal("-0.02")
 
 
-def test_configurable_gis_adjustment_provider_returns_zero_for_unknown_location() -> None:
+def test_configurable_gis_adjustment_provider_returns_zero_for_unknown_location() -> (
+    None
+):
     provider = ConfigurableGeographicRiskAdjustmentProvider(
         adjustment_max=Decimal("0.02"),
         adjustment_min=Decimal("-0.02"),
