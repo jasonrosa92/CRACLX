@@ -1,19 +1,28 @@
-.PHONY: format install lint test test-cov typecheck
+.PHONY: format format-check install lint lint-fix test test-cov typecheck
+
+PYTHON ?= python
+BIN ?= .venv/bin
 
 format:
-	ruff format .
+	$(BIN)/ruff format .
+
+format-check:
+	$(BIN)/ruff format --check .
 
 install:
-	python -m pip install -e ".[dev]"
+	$(PYTHON) -m pip install -e ".[dev]"
 
 lint:
-	ruff check .
+	$(BIN)/ruff check .
+
+lint-fix:
+	$(BIN)/ruff check --fix .
 
 test:
-	pytest
+	$(BIN)/pytest
 
 test-cov:
-	pytest --cov=craclx --cov-report=term-missing
+	$(BIN)/pytest --cov=craclx --cov-report=term-missing
 
 typecheck:
-	mypy src tests
+	$(BIN)/mypy src tests
