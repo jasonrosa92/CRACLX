@@ -138,6 +138,8 @@ Expected outcomes:
 - `#003`: Add developer command documentation
 - `#004`: Add GitHub Actions CI pipeline
 
+CI/CD note: CI is part of `r4` and validates the backend automatically. CD remains intentionally pending until a production deployment target is selected.
+
 ### r5 Tasks
 
 - `#001`: Define GIS adjustment port
