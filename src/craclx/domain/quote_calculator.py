@@ -39,6 +39,12 @@ class QuoteCalculation:
     policy_limit: Decimal
 
 
+@dataclass(frozen=True, slots=True)
+class PolicyLimitCalculation:
+    deductible_value: Decimal
+    policy_limit: Decimal
+
+
 class DynamicRateCalculator:
     def __init__(self, parameters: CalculationParameters) -> None:
         self._parameters = parameters
@@ -73,9 +79,27 @@ class PremiumCalculator:
         return base_premium - deductible_discount + broker_fee
 
 
+class PolicyLimitCalculator:
+    def calculate(
+        self,
+        car_value: Decimal,
+        coverage_percentage: Decimal,
+        deductible_percentage: Decimal,
+    ) -> PolicyLimitCalculation:
+        base_policy_limit = car_value * coverage_percentage
+        deductible_value = base_policy_limit * deductible_percentage
+        policy_limit = base_policy_limit - deductible_value
+
+        return PolicyLimitCalculation(
+            deductible_value=deductible_value,
+            policy_limit=policy_limit,
+        )
+
+
 class QuoteCalculator:
     def __init__(self, parameters: CalculationParameters) -> None:
         self._parameters = parameters
+        self._policy_limit_calculator = PolicyLimitCalculator()
         self._premium_calculator = PremiumCalculator()
         self._rate_calculator = DynamicRateCalculator(parameters=parameters)
 
@@ -107,16 +131,17 @@ class QuoteCalculator:
             car_value=car_value,
             deductible_percentage=deductible_percentage,
         )
-
-        base_policy_limit = car_value * self._parameters.coverage_percentage
-        deductible_value = base_policy_limit * deductible_percentage
-        policy_limit = base_policy_limit - deductible_value
+        policy_limit_calculation = self._policy_limit_calculator.calculate(
+            car_value=car_value,
+            coverage_percentage=self._parameters.coverage_percentage,
+            deductible_percentage=deductible_percentage,
+        )
 
         return QuoteCalculation(
             applied_rate=applied_rate,
             calculated_premium=calculated_premium,
-            deductible_value=deductible_value,
-            policy_limit=policy_limit,
+            deductible_value=policy_limit_calculation.deductible_value,
+            policy_limit=policy_limit_calculation.policy_limit,
         )
 
     def _calculate_applied_rate(
