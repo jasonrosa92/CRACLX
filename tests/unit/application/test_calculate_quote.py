@@ -99,4 +99,6 @@ class FixedGeographicRiskAdjustmentProvider:
         self._adjustment = adjustment
 
     def calculate_adjustment(self, address: Address) -> Decimal:
+        del address
+
         return self._adjustment

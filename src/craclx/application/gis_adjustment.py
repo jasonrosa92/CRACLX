@@ -19,4 +19,6 @@ class GeographicRiskAdjustmentProvider(Protocol):
 
 class NoGeographicRiskAdjustmentProvider:
     def calculate_adjustment(self, address: Address) -> Decimal:
+        del address
+
         return Decimal("0.00")

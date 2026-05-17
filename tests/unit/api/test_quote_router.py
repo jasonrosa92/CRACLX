@@ -112,8 +112,7 @@ def _create_use_case(
             )
         ),
         geographic_risk_adjustment_provider=(
-            geographic_risk_adjustment_provider
-            or NoGeographicRiskAdjustmentProvider()
+            geographic_risk_adjustment_provider or NoGeographicRiskAdjustmentProvider()
         ),
         reference_year=2026,
     )
@@ -124,4 +123,6 @@ class FixedGeographicRiskAdjustmentProvider:
         self._adjustment = adjustment
 
     def calculate_adjustment(self, address: Address) -> Decimal:
+        del address
+
         return self._adjustment

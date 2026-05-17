@@ -39,14 +39,12 @@ class CalculateQuoteUseCase:
     def __init__(
         self,
         calculator: QuoteCalculator,
-        geographic_risk_adjustment_provider: GeographicRiskAdjustmentProvider
-        | None,
+        geographic_risk_adjustment_provider: GeographicRiskAdjustmentProvider | None,
         reference_year: int,
     ) -> None:
         self._calculator = calculator
         self._geographic_risk_adjustment_provider = (
-            geographic_risk_adjustment_provider
-            or NoGeographicRiskAdjustmentProvider()
+            geographic_risk_adjustment_provider or NoGeographicRiskAdjustmentProvider()
         )
         self._reference_year = reference_year
 
