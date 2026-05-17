@@ -136,3 +136,46 @@ Response fields:
 ```
 
 Decimal values are serialized as strings to preserve precision in JSON responses.
+
+## Validation And Error Behavior
+
+### Success
+
+Successful quote calculation returns:
+
+```text
+200 OK
+```
+
+### Invalid Request Payload
+
+Invalid request payloads return FastAPI/Pydantic validation errors:
+
+```text
+422 Unprocessable Entity
+```
+
+Examples of invalid payloads:
+
+- negative `car.value`
+- negative `broker_fee`
+- negative `deductible_percentage`
+- missing required `car` fields
+- invalid field types
+
+Example invalid request:
+
+```json
+{
+  "broker_fee": "50.00",
+  "car": {
+    "make": "Toyota",
+    "model": "Corolla",
+    "year": 2016,
+    "value": "-1.00"
+  },
+  "deductible_percentage": "0.10"
+}
+```
+
+The exact validation error body follows FastAPI's default validation response format.
