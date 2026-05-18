@@ -43,6 +43,12 @@ make typecheck
 make test
 ```
 
+Run the coverage gate used by CI:
+
+```bash
+make test-cov
+```
+
 Type checking uses `mypy` in strict mode. The package includes a `py.typed` marker so type information is available to consumers.
 
 Apply automatic formatting and lint fixes:

@@ -49,6 +49,12 @@ Run coverage when changing business behavior or API contracts:
 make test-cov
 ```
 
+The default coverage threshold is 85%. Override it only when intentionally testing the gate:
+
+```bash
+make test-cov COV_FAIL_UNDER=90
+```
+
 ## Automatic Fixes
 
 Apply formatting:
@@ -120,7 +126,7 @@ make install
 make format-check
 make lint
 make typecheck
-make test
+make test-cov
 ```
 
 If a command fails in CI, reproduce it locally with the same `make` target before changing the workflow.
