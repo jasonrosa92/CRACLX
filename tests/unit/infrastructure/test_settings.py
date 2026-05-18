@@ -90,3 +90,11 @@ def test_settings_reject_invalid_calculation_values(
 ) -> None:
     with pytest.raises(ValidationError):
         Settings(**{field_name: field_value})
+
+
+def test_settings_reject_invalid_gis_adjustment_range() -> None:
+    with pytest.raises(ValidationError):
+        Settings(
+            gis_adjustment_max=Decimal("-0.02"),
+            gis_adjustment_min=Decimal("0.02"),
+        )
