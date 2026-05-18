@@ -1,5 +1,8 @@
+from collections.abc import Callable
 from decimal import Decimal
 
+import pytest
+from pydantic import ValidationError
 from pytest import MonkeyPatch
 
 from craclx.infrastructure.settings import Settings
@@ -70,3 +73,33 @@ def test_settings_load_calculation_parameters_from_environment(
     assert settings.reference_year == 2026
     assert settings.value_rate_increment == Decimal("0.020")
     assert settings.value_rate_unit == Decimal("5000.00")
+
+
+@pytest.mark.parametrize(
+    "settings_factory",
+    [
+        lambda: Settings(age_rate_increment=Decimal("-0.001")),
+        lambda: Settings(age_unit_years=0),
+        lambda: Settings(coverage_percentage=Decimal("-0.01")),
+        lambda: Settings(value_rate_increment=Decimal("-0.001")),
+        lambda: Settings(value_rate_unit=Decimal("0.00")),
+    ],
+)
+def test_settings_reject_invalid_calculation_values(
+    settings_factory: Callable[[], Settings],
+) -> None:
+    with pytest.raises(ValidationError):
+        settings_factory()
+
+
+def test_settings_reject_invalid_gis_adjustment_range() -> None:
+    with pytest.raises(ValidationError):
+        Settings(
+            gis_adjustment_max=Decimal("-0.02"),
+            gis_adjustment_min=Decimal("0.02"),
+        )
+
+
+def test_settings_reject_invalid_reference_year() -> None:
+    with pytest.raises(ValidationError):
+        Settings(reference_year=0)

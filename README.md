@@ -88,3 +88,11 @@ COUNTRY:STATE:CITY:POSTAL_CODE
 ```
 
 Use `*` as a wildcard segment, for example `BR:SP:Sao Paulo:*`.
+
+Configuration validation fails fast when:
+
+- rate increments are negative
+- age or value units are zero or negative
+- coverage percentage is negative
+- `GIS_ADJUSTMENT_MIN` is greater than `GIS_ADJUSTMENT_MAX`
+- `REFERENCE_YEAR` is configured as zero or negative
