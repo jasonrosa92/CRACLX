@@ -1,5 +1,7 @@
 from decimal import Decimal
 
+import pytest
+from pydantic import ValidationError
 from pytest import MonkeyPatch
 
 from craclx.infrastructure.settings import Settings
@@ -70,3 +72,21 @@ def test_settings_load_calculation_parameters_from_environment(
     assert settings.reference_year == 2026
     assert settings.value_rate_increment == Decimal("0.020")
     assert settings.value_rate_unit == Decimal("5000.00")
+
+
+@pytest.mark.parametrize(
+    ("field_name", "field_value"),
+    [
+        ("age_rate_increment", Decimal("-0.001")),
+        ("age_unit_years", 0),
+        ("coverage_percentage", Decimal("-0.01")),
+        ("value_rate_increment", Decimal("-0.001")),
+        ("value_rate_unit", Decimal("0.00")),
+    ],
+)
+def test_settings_reject_invalid_calculation_values(
+    field_name: str,
+    field_value: Decimal | int,
+) -> None:
+    with pytest.raises(ValidationError):
+        Settings(**{field_name: field_value})
