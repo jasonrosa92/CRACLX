@@ -64,6 +64,15 @@ Health check:
 GET /health
 ```
 
+Run with Docker:
+
+```bash
+docker build -t craclx-backend .
+docker run --rm -p 8000:8000 --env-file .env craclx-backend
+```
+
+If no `.env` file is needed, omit `--env-file .env`.
+
 ## Configuration
 
 Business calculation parameters are loaded from environment variables or `.env`.

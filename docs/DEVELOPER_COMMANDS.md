@@ -93,6 +93,22 @@ POST /quotes
 
 The request and response contract is documented in [API Contract](API_CONTRACT.md).
 
+## Run With Docker
+
+Build the container image:
+
+```bash
+docker build -t craclx-backend .
+```
+
+Run the API container:
+
+```bash
+docker run --rm -p 8000:8000 --env-file .env craclx-backend
+```
+
+If local environment variables are not needed, omit `--env-file .env`.
+
 ## Continuous Integration
 
 GitHub Actions runs the backend validation pipeline on pull requests and pushes to `develop` and `main`.
