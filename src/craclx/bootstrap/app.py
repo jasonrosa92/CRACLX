@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 
+from craclx.api.error_handlers import register_error_handlers
 from craclx.api.quote_router import create_quote_router
 from craclx.bootstrap.use_cases import create_calculate_quote_use_case
 from craclx.infrastructure.settings import get_settings
@@ -8,6 +9,7 @@ from craclx.infrastructure.settings import get_settings
 def create_app() -> FastAPI:
     settings = get_settings()
     app = FastAPI(title=settings.app_name, version=settings.app_version)
+    register_error_handlers(app=app)
     app.include_router(
         create_quote_router(use_case=create_calculate_quote_use_case(settings=settings))
     )

@@ -180,6 +180,30 @@ Example invalid request:
 
 The exact validation error body follows FastAPI's default validation response format.
 
+### Domain Validation Error
+
+Requests that pass HTTP schema validation but violate business rules return:
+
+```text
+400 Bad Request
+```
+
+Example response:
+
+```json
+{
+  "error": {
+    "code": "domain_validation_error",
+    "message": "vehicle_year must be less than or equal to reference_year"
+  }
+}
+```
+
+Examples of domain validation failures:
+
+- vehicle year greater than the configured reference year
+- business values that are structurally valid but invalid for quote calculation
+
 ## Configuration Impact
 
 The quote endpoint uses backend configuration values when calculating the response.

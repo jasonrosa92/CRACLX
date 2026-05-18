@@ -67,6 +67,38 @@ async def test_quote_endpoint_rejects_invalid_payload() -> None:
 
 
 @pytest.mark.anyio
+async def test_quote_endpoint_maps_domain_validation_errors(
+    monkeypatch: MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("REFERENCE_YEAR", "2026")
+    get_settings.cache_clear()
+    transport = ASGITransport(app=create_app())
+
+    async with AsyncClient(base_url="http://testserver", transport=transport) as client:
+        response = await client.post(
+            "/quotes",
+            json={
+                "broker_fee": "50.00",
+                "car": {
+                    "make": "Toyota",
+                    "model": "Corolla",
+                    "value": "100000.00",
+                    "year": 2027,
+                },
+                "deductible_percentage": "0.10",
+            },
+        )
+
+    assert response.status_code == 400
+    assert response.json() == {
+        "error": {
+            "code": "domain_validation_error",
+            "message": "vehicle_year must be less than or equal to reference_year",
+        }
+    }
+
+
+@pytest.mark.anyio
 async def test_quote_endpoint_uses_configured_calculation_parameters(
     monkeypatch: MonkeyPatch,
 ) -> None:
