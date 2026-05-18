@@ -1,7 +1,9 @@
 from decimal import Decimal
 from functools import lru_cache
 
-from pydantic import Field
+from typing import Self
+
+from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from craclx.domain.quote_calculator import CalculationParameters
@@ -23,6 +25,14 @@ class Settings(BaseSettings):
     value_rate_unit: Decimal = Field(default=Decimal("10000.00"), gt=Decimal("0"))
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+
+    @model_validator(mode="after")
+    def validate_gis_adjustment_range(self) -> Self:
+        if self.gis_adjustment_min > self.gis_adjustment_max:
+            msg = "gis_adjustment_min must be less than or equal to gis_adjustment_max"
+            raise ValueError(msg)
+
+        return self
 
     def to_calculation_parameters(self) -> CalculationParameters:
         return CalculationParameters(
