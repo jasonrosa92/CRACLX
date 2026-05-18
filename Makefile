@@ -1,6 +1,7 @@
 .PHONY: format format-check install lint lint-fix test test-cov typecheck
 
 PYTHON ?= python
+COV_FAIL_UNDER ?= 85
 
 format:
 	$(PYTHON) -m ruff format .
@@ -21,7 +22,7 @@ test:
 	$(PYTHON) -m pytest
 
 test-cov:
-	$(PYTHON) -m pytest --cov=craclx --cov-report=term-missing
+	$(PYTHON) -m pytest --cov=craclx --cov-report=term-missing --cov-fail-under=$(COV_FAIL_UNDER)
 
 typecheck:
 	$(PYTHON) -m mypy src tests
