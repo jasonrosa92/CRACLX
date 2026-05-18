@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     gis_adjustment_min: Decimal = Decimal("-0.02")
     gis_high_risk_locations: tuple[str, ...] = ()
     gis_low_risk_locations: tuple[str, ...] = ()
-    reference_year: int | None = None
+    reference_year: int | None = Field(default=None, gt=0)
     value_rate_increment: Decimal = Field(default=Decimal("0.005"), ge=Decimal("0"))
     value_rate_unit: Decimal = Field(default=Decimal("10000.00"), gt=Decimal("0"))
 
