@@ -1,6 +1,5 @@
 from decimal import Decimal
 from functools import lru_cache
-
 from typing import Self
 
 from pydantic import Field, model_validator

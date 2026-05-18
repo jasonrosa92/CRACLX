@@ -1,3 +1,4 @@
+from collections.abc import Callable
 from decimal import Decimal
 
 import pytest
@@ -75,21 +76,20 @@ def test_settings_load_calculation_parameters_from_environment(
 
 
 @pytest.mark.parametrize(
-    ("field_name", "field_value"),
+    "settings_factory",
     [
-        ("age_rate_increment", Decimal("-0.001")),
-        ("age_unit_years", 0),
-        ("coverage_percentage", Decimal("-0.01")),
-        ("value_rate_increment", Decimal("-0.001")),
-        ("value_rate_unit", Decimal("0.00")),
+        lambda: Settings(age_rate_increment=Decimal("-0.001")),
+        lambda: Settings(age_unit_years=0),
+        lambda: Settings(coverage_percentage=Decimal("-0.01")),
+        lambda: Settings(value_rate_increment=Decimal("-0.001")),
+        lambda: Settings(value_rate_unit=Decimal("0.00")),
     ],
 )
 def test_settings_reject_invalid_calculation_values(
-    field_name: str,
-    field_value: Decimal | int,
+    settings_factory: Callable[[], Settings],
 ) -> None:
     with pytest.raises(ValidationError):
-        Settings(**{field_name: field_value})
+        settings_factory()
 
 
 def test_settings_reject_invalid_gis_adjustment_range() -> None:
