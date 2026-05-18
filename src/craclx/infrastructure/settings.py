@@ -1,25 +1,26 @@
 from decimal import Decimal
 from functools import lru_cache
 
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from craclx.domain.quote_calculator import CalculationParameters
 
 
 class Settings(BaseSettings):
-    age_rate_increment: Decimal = Decimal("0.005")
-    age_unit_years: int = 1
+    age_rate_increment: Decimal = Field(default=Decimal("0.005"), ge=Decimal("0"))
+    age_unit_years: int = Field(default=1, gt=0)
     app_env: str = "local"
     app_name: str = "CRACLX"
     app_version: str = "0.1.0"
-    coverage_percentage: Decimal = Decimal("1.00")
+    coverage_percentage: Decimal = Field(default=Decimal("1.00"), ge=Decimal("0"))
     gis_adjustment_max: Decimal = Decimal("0.02")
     gis_adjustment_min: Decimal = Decimal("-0.02")
     gis_high_risk_locations: tuple[str, ...] = ()
     gis_low_risk_locations: tuple[str, ...] = ()
     reference_year: int | None = None
-    value_rate_increment: Decimal = Decimal("0.005")
-    value_rate_unit: Decimal = Decimal("10000.00")
+    value_rate_increment: Decimal = Field(default=Decimal("0.005"), ge=Decimal("0"))
+    value_rate_unit: Decimal = Field(default=Decimal("10000.00"), gt=Decimal("0"))
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
