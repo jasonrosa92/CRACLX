@@ -98,3 +98,8 @@ def test_settings_reject_invalid_gis_adjustment_range() -> None:
             gis_adjustment_max=Decimal("-0.02"),
             gis_adjustment_min=Decimal("0.02"),
         )
+
+
+def test_settings_reject_invalid_reference_year() -> None:
+    with pytest.raises(ValidationError):
+        Settings(reference_year=0)
